@@ -165,7 +165,7 @@ int juego(int modo)
 			break;
 		default:
 			tdp();
-			return -1;
+			
 			break;
 	}
 	
