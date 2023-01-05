@@ -5,6 +5,28 @@
 #include<time.h>
 #include <ctype.h>
 
+void Color(int Background, int Text); // Prototipo de función          
+
+enum Colors { // Listado de colores (La letra "L" al inicio, indica que es un color más claro que su antecesor).
+ BLACK = 0,
+ BLUE = 1,
+ GREEN = 2,
+ CYAN = 3,
+ RED = 4,
+ MAGENTA = 5,
+ BROWN = 6,
+ LGREY = 7,
+ DGREY = 8,
+ LBLUE = 9,
+ LGREEN = 10,
+ LCYAN = 11,
+ LRED = 12,
+ LMAGENTA = 13,
+ YELLOW = 14,
+ WHITE = 15
+};
+
+
 void titulo(char move2[], int record, int pasada);
 
 int juego(int modo);
@@ -26,12 +48,14 @@ int main()
 
 void titulo(char move2[], int record, int pasada)
 {
+	Color(BLACK,CYAN);
 	printf( "					  _______                                       \n");
 	printf( "					 |__   __|                                      \n");
 	printf( "					    | | _ __  ___   __ _  ___  _   _  _ __  ___ \n");
 	printf( "					    | || '__|/ _ \\ / _\\ |/ __|| | | || '__|/ _ \\\n");
 	printf( "					    | || |  |  __/| (_| |\\__ \\| |_| || |  |  __/\n");
 	printf( "					    |_||_|  _\\___| \\__,_||___/ \\__,_||_|   \\___|\n");
+	Color(BLACK, YELLOW),
 	printf( "					           / __ \\                   | |         \n");
 	printf( "					          | |  | | _   _   ___  ___ | |_        \n");
 	printf( "					          | |  | || | | | / _ \\/ __|| __|       \n");
@@ -40,14 +64,20 @@ void titulo(char move2[], int record, int pasada)
 	printf( "					                                                \n");
 	printf( "					                                                \n");
 	printf( "					                                                \n");
+	Color(BLACK, LGREEN);
 	printf( "					                %2c Modo facil                                \n", move2[0]);
+	Color(BLACK, YELLOW);
 	printf( "					                %2c Modo Normal                                \n", move2[1]);
+	Color(BLACK, LRED);
 	printf( "					                %2c Modo dificil                                \n", move2[2]);
+	Color(BLACK, WHITE);
 	printf( "					                                                \n");
 	printf( "					                %2c Salir                                \n", move2[3]);
 	printf( "					                                                \n");
 	printf( "					          | Movimientos ultima partida: %d  |                              \n", pasada);
+	Color(BLACK, YELLOW);
 	printf( "					          |  Record de movimientos: %d      |                          \n", record);
+	Color(BLACK, WHITE);
 	printf( "					                                                \n");
 	printf( "					            [ W  arriba  //  S  abajo ]                                \n");
 	printf( "                                                \n");
@@ -57,7 +87,7 @@ void titulo(char move2[], int record, int pasada)
 
 int selec(char move[], int i)
 {
-	int record = 0, pasada = 0;
+	int record = 0, pasada = 0, respaldo = 0;
 	
 	do
 	{
@@ -98,11 +128,15 @@ int selec(char move[], int i)
 			case 13:
 				
 				pasada = juego(i);
-				if(record == 0)record = pasada;
+				if(pasada != 0)
+				{
+					if(pasada < record)
+					{
+						record = pasada;
+					}	
+					record = pasada;
+				}
 				
-				if(pasada < record)record = pasada;
-				
-				if(pasada == -1)return -1;
 				break;
 			default:
 				break;
@@ -139,14 +173,14 @@ int juego(int modo)
 int modos(int n, int m, int ct, int cm)
 {
 	
-	int mod;
+	int mod, i = 0, j = 0, cont = 0;
 	
 	mod = ct;
-	srand(time(NULL));
 	
+	srand(time(NULL));
 	char nivel[n][m];
 	
-	int i = 0, j = 0, cont = 0;
+	
 	
 	for(i = 0; i < n; i++)
 	{
@@ -159,15 +193,11 @@ int modos(int n, int m, int ct, int cm)
 	
 	do //PONER TESOROS RANDOM
 	{
-		if(m == 10)
-		{
-			i = rand()%10;
-			j = rand()%10;
-		}else
-		{
-			i = rand()%10;
-			j = rand()%15;
-		}
+		
+		
+		i = rand()%n;
+		j = rand()%m;
+		
 		if(nivel[i][j] == 32)
 		{
 			nivel[i][j] = 'T';
@@ -178,15 +208,8 @@ int modos(int n, int m, int ct, int cm)
 	cont = 0;	
 	do //PONER TESOROS RANDOM
 	{
-		if(m == 10)
-		{
-			i = rand()%10;
-			j = rand()%10;
-		}else
-		{
-			i = rand()%10;
-			j = rand()%15;
-		}
+		i = rand()%n;
+		j = rand()%m;
 
 		if(nivel[i][j] == 32)
 		{
@@ -247,7 +270,7 @@ int modos(int n, int m, int ct, int cm)
 				}
 				break;
 			case 's':
-				if(i<n)
+				if(i<n-1)
 				{
 					if(nivel[i+1][j] == 'T')
 					{
@@ -303,7 +326,7 @@ int modos(int n, int m, int ct, int cm)
 				}
 				break;
 			case 'd':
-				if(j<m)
+				if(j<m-1)
 				{
 					if(nivel[i][j+1] == 'T')
 					{
@@ -332,15 +355,18 @@ int modos(int n, int m, int ct, int cm)
 				break;
 			
 			case 27:
-				return cont;
-			
+				
+				
+				return 0;
+
 			default:
 				break;
 		}
 		
 	}while(1);
 	
-	printf("\nFELICIDADES GANASTE\n");
+	printf("\n					FELICIDADES GANASTE\n\n");
+	printf("					");
 	system("pause");
 	return cont;
 
@@ -357,10 +383,26 @@ void mostrar_pantalla(char nivel[10][10], int cont, int tesoros)
 		printf("					");
 		for(j = 0; j < 10; j++)
 		{
+			if(nivel[i][j] == 'M')
+			{
+				Color(RED, BLACK);
+			}else if(nivel[i][j] == 'T')
+			{
+				Color(YELLOW, BLUE);	
+			}else if(nivel[i][j] == '#')
+			{
+				
+				Color(GREEN, BLACK);
+			}else
+			{
+				Color(BLACK, LGREEN);
+			}
+			
 			printf("[%c]", nivel[i][j]);
 		}
 		printf("\n");
 	}
+	Color(BLACK, WHITE);
 	printf("\n\n					Arriba:  w // Abajo:  s\n\n					Izquierda: a // Derecha:  d \n");
 	printf( "                                                \n");
 	printf( "					Salir: esc                                   \n");
@@ -369,7 +411,6 @@ void mostrar_pantalla(char nivel[10][10], int cont, int tesoros)
 void mostrar_pantalla2(char nivel[10][15], int cont, int tesoros)
 {
 	int i,j;
-	
 	printf("\n\n\n					[Movimientos: %d]\n", cont);
 	printf("					[Tesoros: %d]\n\n", tesoros);
 	for(i = 0; i < 10; i++)
@@ -377,17 +418,34 @@ void mostrar_pantalla2(char nivel[10][15], int cont, int tesoros)
 		printf("					");
 		for(j = 0; j < 15; j++)
 		{
+			if(nivel[i][j] == 'M')
+			{
+				Color(RED, BLACK);
+			}else if(nivel[i][j] == 'T')
+			{
+				Color(YELLOW, BLUE);	
+			}else if(nivel[i][j] == '#')
+			{
+				
+				Color(GREEN, BLACK);
+			}else
+			{
+				Color(BLACK, LGREEN);
+			}
+			
 			printf("[%c]", nivel[i][j]);
 		}
 		printf("\n");
 	}
+	Color(BLACK, WHITE);
 	printf("\n\n					Arriba:  w // Abajo:  s\n\n					Izquierda: a // Derecha:  d \n");
 	printf( "                                                \n");
 	printf( "					Salir: esc                                   \n");
 }
 void tdp()
 {
-	printf( "					  _______                  _                      \n");
+	Color(BLACK, RED);
+	printf( "\n\n\n\n\n					  _______                  _                      \n");
 	printf( "					 |__   __|                (_)                     \n");
 	printf( "					    | | ___ _ __ _ __ ___  _ _ __   ___           \n");
 	printf( "					    | |/ _ \\ '__| '_ \\ _ \\| | '_ \\ / _ \\          \n");
@@ -403,8 +461,19 @@ void tdp()
 	printf( "					 |_|   |_|  \\___/ \\__, |_|  \\__,_|_| |_| |_|\\__,_|\n");
 	printf( "					                   __/ |                          \n");
 	printf( "					                  |___/                           \n");
-	printf( "                                                \n");
-	printf( "                                                \n");
-	printf( "                                                \n");
+	Color(BLACK, BLACK);
+	exit(0);
 	
+}
+
+void Color(int Background, int Text){ // Función para cambiar el color del fondo y/o pantalla
+
+ HANDLE Console = GetStdHandle(STD_OUTPUT_HANDLE); // Tomamos la consola.
+
+ // Para cambiar el color, se utilizan números desde el 0 hasta el 255.
+ // Pero, para convertir los colores a un valor adecuado, se realiza el siguiente cálculo.
+ int    New_Color= Text + (Background * 16);
+
+ SetConsoleTextAttribute(Console, New_Color); // Guardamos los cambios en la Consola.
+
 }
