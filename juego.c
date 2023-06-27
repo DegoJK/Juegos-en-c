@@ -128,14 +128,14 @@ int selec(char move[], int i)
 			case 13:
 				
 				pasada = juego(i);
-				if(pasada != 0)
+				if(record == 0)
 				{
-					if(pasada < record)
-					{
-						record = pasada;
-					}	
 					record = pasada;
 				}
+				if(pasada < record)
+				{
+					record = pasada;
+				}	
 				
 				break;
 			default:
